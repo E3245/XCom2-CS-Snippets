@@ -1,0 +1,38 @@
+//---------------------------------------------------------------------------------------
+//  FILE:    SeqAct_StopMainMenuMusic.uc
+//  AUTHOR:  E3245
+//  PURPOSE: Disables the shell menu music when this node is activated until the next 
+//			 loading screen.
+//           
+//---------------------------------------------------------------------------------------
+class SeqAct_StopMainMenuMusic extends SequenceAction;
+
+event Activated()
+{
+	local XComShell ShellMenu;
+
+	// Test if this is the XComShell.uc
+	ShellMenu = XComShell(class'WorldInfo'.static.GetWorldInfo().Game);
+
+	if (ShellMenu == none)
+	{
+		`redscreen("[" $ default.class $ "::" $ GetFuncName() $ "] Attempted to activate SeqAct while NOT in XComShell!" );
+		return;
+	}
+
+	// Stop the shell music
+	ShellMenu.StopMenuMusic();
+
+	// Remove AKEvent reference
+	ShellMenu.PlayMainMenuMusic = none;
+}
+
+defaultproperties
+{
+	ObjName="Stop Shell Menu Music"
+	ObjCategory="Kismet"
+	bPlayerOnly=FALSE
+	MaxTriggerCount=0
+
+	VariableLinks.Empty
+}
